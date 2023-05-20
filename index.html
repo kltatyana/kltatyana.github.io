@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Методы сортировки в JavaScript</title>
+	<meta charset="utf-8">
+	<meta name="author" content="Колмыкова Татьяна З-ИТ-22">
+	
+	<style>
+	  .it {
+	    width: 300px;
+	  }
+	  .block {
+        float: left;
+      } 
+      .leg {
+	    font-weight: bold;
+		font-size: 20px;
+        color: blue;
+
+	  }	
+      input:invalid {
+        border: red solid 3px;
+      }	  
+	</style>
+  </head>
+  <body>
+    <header>
+      <img src="sort.jpeg" height="100px">
+	  <h1>Методы сортировки в JavaScript</h1>
+    </header>
+	
+    <nav>
+      <ul>
+        <li><a href="index.html">Главная</a></li>
+        <li><a href="merge-sort.html">Cортировка слиянием</a></li>
+        <li><a href="quick-sort.html">Быстрая сортировка</a></li>
+      </ul>
+    </nav>
+   
+    <main>
+      <section>
+        <h2>Введение</h2>
+		<p>Сортировка относится к расположению элементов списка в определенном порядке (числовом или буквенном). Сортировка обычно используется вместе с поиском. Как правило, легче искать элемент (называемый ключом) в данном списке, если список отсортирован как визуально, так и алгоритмически.</p>
+        <p>JavaScript предоставляет нам множество методов для сортировки массивов. Мы рассмотрим два из них: сортировку слиянием (merge sort) и быструю сортировку (quick sort). Описание этих сортировок - по ссылкам выше.</p>
+      </section>
+	  
+	 <!-- <form>-->
+	    <h2>Примеры использования</h2>
+	    <p><h4>Введите массив чисел через запятую</h4></p>
+	    <input type="text" class="it" id="inputStr" pattern="^[0-9,\-\+\.]+$">
+	    <p></p>
+		
+	    <fieldset class="block">
+	      <legend class="leg">Сортировка слиянием</legend>
+		  <p><button onclick="showMergeSort()">Сортировать</button></p>
+	      <p>Результат сортировки слиянием</p>
+		  <p><input type="text" class="it" id="outputMergeSort" width="150px" disabled></p>
+	      <p><label id="timeMergeSort">Время сортировки</label></p>
+	    </fieldset>  
+		
+	    <fieldset class="block">
+	      <legend class="leg">Быстрая сортировка</legend>
+		  <p><button onclick="showQuickSort()">Сортировать</button></p>
+	      <p>Результат быстрой сортировки</p>
+	      <p><input type="text" class="it" id="outputQuickSort" width="150px" disabled></p>
+		  <p><label id="timeQuickSort">Время сортировки</label></p>
+	    </fieldset>
+
+        <!--Прерываем обтекание-->
+        <div style="clear: both;"></div>
+	 <!-- </form>	-->
+    </main>
+   
+    <br><br>
+    <footer>
+      <p>&copy; Колмыкова Татьяна, гр. З-ИТ-22</p>
+    </footer>
+    
+    <script>
+	  // Проверка введенной строки и преобразование ее в массив
+	  function validate() {
+	    let arr = [];
+	    let str = document.getElementById("inputStr").value;
+		let regexp = /^[0-9,\-\+\.]+$/;
+	    
+		if (regexp.test(str)) {
+		  arr = str.split(',');  //.map(Number);
+		}
+		else {
+		  alert("В строке ввода недопустимые символы или строка пуста");
+		}
+			
+		return arr
+	  }
+	  
+	  // Вызов сортировки слиянием, подсчет времени выполнения и 
+	  // вывод рзультатов 
+	  function showMergeSort() {
+	    arr = validate();
+		if (arr.length == 0) {
+		  return
+		}
+		
+	    const t0 = performance.now();
+		var sortedArr = mergeSort(arr);
+		const t1 = performance.now();
+		let t = t1 - t0;
+
+        document.getElementById("outputMergeSort").value = sortedArr;
+		document.getElementById("timeMergeSort").innerHTML = t + ' milliseconds';
+	  }
+	  // Сортировка слиянием
+	  function mergeSort(arr) {
+        if (arr.length === 1) {
+          return arr;
+        }
+      
+	    const mid = Math.floor(arr.length / 2);
+        const left = arr.slice(0, mid);
+        const right = arr.slice(mid);
+		// Рекурсия
+        return merge(mergeSort(left), mergeSort(right));
+      }
+      // Слияние
+      function merge(left, right) {
+        let result = [];
+        while (left.length && right.length) {
+          if (left[0] < right[0]) {
+            result.push(left.shift());
+          } 
+		  else {
+            result.push(right.shift());
+          }
+        }
+        return result.concat(left, right);
+      }
+	  
+	  // Вызов быстрой сортировки, подсчет времени выполнения и 
+	  // вывод рзультатов 
+	  function showQuickSort() {
+	    var arr = validate();
+		if (arr.length == 0) {
+		  return
+		}
+		
+	    const t0 = performance.now();
+		var sortedArr = quickSort(arr);
+		const t1 = performance.now();
+		let t = t1 - t0;
+
+        document.getElementById("outputQuickSort").value = sortedArr;
+		document.getElementById("timeQuickSort").innerHTML = t + ' milliseconds';
+      }
+	  // Быстрая сортировка
+	  function quickSort(arr) {
+	    if (arr.length <= 1) {
+          return arr;
+        }
+           
+        var pivot = arr[arr.length - 1];
+		var leftArr = [];
+        var rightArr = [];
+           
+        for (var i = 0; i < arr.length - 1; i++) {
+          if (arr[i] < pivot) {
+            leftArr.push(arr[i]);
+		  } 
+		  else {
+            rightArr.push(arr[i]);
+          }
+        }
+		// Рекурсия
+        return quickSort(leftArr).concat(pivot, quickSort(rightArr));
+      }
+    </script>	
+  </body>
+</html>
+
