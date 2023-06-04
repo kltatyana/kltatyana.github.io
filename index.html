@@ -84,7 +84,7 @@
 		let regexp = /^[0-9,\-\+\.]+$/;
 	    
 		if (regexp.test(str)) {
-		  arr = str.split(',');  //.map(Number);
+		  arr = str.split(',').map(Number);
 		}
 		else {
 		  alert("В строке ввода недопустимые символы или строка пуста");
